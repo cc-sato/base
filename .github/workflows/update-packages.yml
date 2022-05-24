@@ -19,12 +19,10 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: yarn install
-        env:
-          PRIVATE_KEY: ${{ secrets.CI_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          ssh-add - <<< "${$PRIVATE_KEY}"
+          ssh-add - <<< "${{ secrets.CI_SSH_KEY }}"
           yarn install
       - name: Create Pull Request
         id: cpr
