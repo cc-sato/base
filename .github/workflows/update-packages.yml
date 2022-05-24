@@ -18,7 +18,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: Install
-        run: npm install component
+        run: npm i git+ssh://git@github.com/cc-sato/base.git
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
