@@ -6,10 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/cc-sato/base.git"
-  },
+  "repository": "git+ssh://git@github.com/cc-sato/base.git",
   "author": "cc-sato",
   "license": "ISC",
   "bugs": {
