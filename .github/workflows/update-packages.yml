@@ -29,6 +29,9 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn install
+          git diff
+      - name: Make changes to pull request
+        run: date +%s > report.txt
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
@@ -37,7 +40,6 @@ jobs:
           commit-message: 'Update packages'
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
-          signoff: false
           branch: feature/update-package
           title: 'Update Packages by CI'
           body: |
