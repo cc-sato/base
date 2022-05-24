@@ -37,9 +37,6 @@ jobs:
           title: 'Update Packages by CI'
           body: |
             @${{ github.actor }}
-            ```
-            ${{ github.event }}
-      ```
       - name: Check Pull Request
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
