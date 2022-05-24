@@ -19,11 +19,13 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: yarn install
-        # ssh接続のための接続
-        uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.CI_SSH_KEY }}
-        run: yarn install
+        env:
+          PRIVATE_KEY: ${{ secrets.CI_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          ssh-add - <<< "${$PRIVATE_KEY}"
+          yarn install
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
