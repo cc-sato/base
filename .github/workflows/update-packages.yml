@@ -35,7 +35,7 @@ jobs:
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.CI_SSH_PRIVATE_KEY }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Update packages'
           committer: GitHub <noreply@github.com>
           author: ${{ github.actor }}
