@@ -29,7 +29,6 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn install
-          git diff
       - name: Make changes to pull request
         run: date +%s > report.txt
       - name: Create Pull Request
