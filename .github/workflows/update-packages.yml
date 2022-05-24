@@ -1,7 +1,7 @@
 name: Update Packages
 on:
   repository_dispatch:
-    types: [update-packages] # with client_payload.packages
+    types: [update-packages]
   workflow_dispatch:
       packages:
         description: ''
@@ -34,14 +34,14 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.ALL_ADMIN }}
-          commit-message: 'Update packages'
+          commit-message: 'Update frontend-component'
           committer: GitHub <noreply@github.com>
           signoff: false
           author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
           branch: feature/update-package
           base: master
           delete-branch: true
-          title: 'Update Packages by CI'
+          title: '【自動作成PR】Update frontend-component Packages'
           body: |
             @${{ github.actor }}
       - name: Check Pull Request
