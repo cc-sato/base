@@ -21,7 +21,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: Install
-        run: npm install ${{ PACKAGE_NAME }}
+        run: npm install
       - Update packages by workflow_dispatch
         if: ${{ github.event.inputs.packages != null }}
         run: npm update ${{ github.event.inputs.packages }}
