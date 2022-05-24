@@ -18,7 +18,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: Install
-        run: yarn add component
+        run: yarn add git+ssh://git@github.com/cc-sato/component.git#master
         env:
           NODE_AUTH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       - name: Create Pull Request
