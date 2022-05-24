@@ -1,0 +1,53 @@
+name: Update Packages
+on:
+  repository_dispatch:
+    types: [update-packages] # with client_payload.packages
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: ''
+        required: true
+        default: ''
+
+env:
+  PACKAGE_NAME: component
+
+jobs:
+  update-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: setup Node
+        uses: actions/setup-node@v1
+      - name: Install
+        run: npm install ${{ PACKAGE_NAME }}
+      - Update packages by workflow_dispatch
+        if: ${{ github.event.inputs.packages != null }}
+        run: npm update ${{ github.event.inputs.packages }}
+      - Update packages by repository_dispatch
+        if: ${{ github.event.client_payload.packages != null }}
+        run: npm update ${{ github.event.client_payload.packages }}
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Update packages'
+          committer: GitHub <noreply@github.com>
+          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          signoff: false
+          branch: feature/update-package
+          branch-suffix: timestamp
+          delete-branch: true
+          title: 'Update Packages by CI'
+          body: |
+            @${{ github.actor }}
+            ```
+            ${{ github.event.inputs.packages }}
+      ${{ github.event.client_payload.packages }}
+      ```
+      - name: Check Pull Request
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"

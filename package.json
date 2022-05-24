@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/cc-sato/base#readme",
   "dependencies": {
-    "component": "git+ssh://git@github.com/cc-sato/component.git#master"
+    "component": "github:cc-sato/component#master"
   }
 }
