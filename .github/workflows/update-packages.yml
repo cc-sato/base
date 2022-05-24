@@ -9,9 +9,6 @@ on:
         required: true
         default: ''
 
-env:
-  PACKAGE_NAME: component
-
 jobs:
   update-packages:
     runs-on: ubuntu-latest
@@ -21,7 +18,7 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: Install
-        run: npm install ${{ PACKAGE_NAME }}
+        run: npm install component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
