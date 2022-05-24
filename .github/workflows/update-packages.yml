@@ -21,15 +21,9 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: Install
-        run: npm install
-      - Update packages by workflow_dispatch
-        if: ${{ github.event.inputs.packages != null }}
-        run: npm update ${{ github.event.inputs.packages }}
-      - Update packages by repository_dispatch
-        if: ${{ github.event.client_payload.packages != null }}
-        run: npm update ${{ github.event.client_payload.packages }}
+        run: npm install ${{ PACKAGE_NAME }}
       - name: Create Pull Request
-        id: cpr
+        id: fc-cpr
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
