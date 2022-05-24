@@ -28,9 +28,7 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          yarn install
-      - name: Make changes to pull request
-        run: date +%s > report.txt
+          yarn add git+ssh://git@github.com/cc-sato/component.git#master
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
@@ -42,6 +40,7 @@ jobs:
           author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
           branch: feature/update-package
           base: master
+          delete-branch: true
           title: 'Update Packages by CI'
           body: |
             @${{ github.actor }}
