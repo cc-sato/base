@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/cc-sato/base/issues"
   },
-  "homepage": "https://github.com/cc-sato/base#readme"
+  "homepage": "https://github.com/cc-sato/base#readme",
+  "dependencies": {
+    "component": "git+ssh://git@github.com/cc-sato/component.git#master"
+  }
 }
