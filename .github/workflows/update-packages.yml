@@ -38,7 +38,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'Update packages'
           committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }}
+          author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
           branch: feature/update-package
           base: master
           title: 'Update Packages by CI'
