@@ -33,13 +33,14 @@ jobs:
         run: date +%s > report.txt
       - name: Create Pull Request
         id: cpr
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.CI_SSH_PRIVATE_KEY }}
           commit-message: 'Update packages'
           committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          author: ${{ github.actor }}
           branch: feature/update-package
+          base: master
           title: 'Update Packages by CI'
           body: |
             @${{ github.actor }}
