@@ -20,16 +20,10 @@ jobs:
         uses: actions/setup-node@v1
       - name: yarn install
         # ssh接続のための接続
-        env:
-          PRIVATE_KEY: ${{ secrets.CI_SSH_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 700 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          yarn install
+        uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: ${{ secrets.CI_SSH_KEY }}
+        run: yarn install
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3
