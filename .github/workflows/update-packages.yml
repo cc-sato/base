@@ -2,6 +2,7 @@ name: Update Packages
 on:
   repository_dispatch:
     types: [update-packages] # with client_payload.packages
+  workflow_dispatch
 
 jobs:
   update-packages:
