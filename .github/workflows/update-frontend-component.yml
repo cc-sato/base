@@ -44,7 +44,7 @@ jobs:
           title: '【自動作成PR】Update frontend-component'
           body: |
             frontend-component側が更新されたので、yarn.lockを更新しましょう。
-            ※2approve
+            ※要 2Approve
       - name: Check Pull Request
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
