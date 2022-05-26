@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v1
       - name: install frontend-component
         run: |
-          npm i -D git+ssh://git@github.com/operation-check-for-GHorganization/component
+          npm i -D git+ssh://git@github.com/operation-check-for-GHorganization/component#master
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
