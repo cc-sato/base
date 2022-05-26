@@ -17,7 +17,7 @@ jobs:
           persist-credentials: false
       - name: setup Node
         uses: actions/setup-node@v1
-      - name: yarn install
+      - name: install frontend-component
         env:
           PRIVATE_KEY: ${{ secrets.CI_SSH_PRIVATE_KEY }}
         run: |
@@ -28,11 +28,12 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
+          eval $(ssh-agent -k)
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.ALL_ADMIN }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
           commit-message: 'Update frontend-component'
           committer: GitHub <noreply@github.com>
           signoff: false
