@@ -2,6 +2,6 @@
 # yarn lockfile v1
 
 
-"component@git+ssh://git@github.com/cc-sato/component.git#master":
-  version "1.0.0"
-  resolved "git+ssh://git@github.com/cc-sato/component.git#ae83518d9386154244480239b7bc5e4fa43c8c8f"
+"component@git+ssh://git@github.com/operation-check-for-GHorganization/component":
+  version "1.0.2"
+  resolved "git+ssh://git@github.com/operation-check-for-GHorganization/component#ae83518d9386154244480239b7bc5e4fa43c8c8f"
