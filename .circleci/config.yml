@@ -18,6 +18,8 @@ commit_and_push: &commit_and_push
     name: Commit and push
     command: |
       HEAD_BRANCH=feature/update-fc
+      git config --global user.email "tatsuya.satot@coincheck.com"
+      git config --global user.name "cc-sato"
       git add . && \
       git commit -m '[skip ci] build package' && \
       git push origin ${HEAD_BRANCH}
