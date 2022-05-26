@@ -30,22 +30,14 @@ jobs:
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
           eval $(ssh-agent -k)
       - name: Create Pull Request
-        run: |
-          curl \
-            -X POST https://api.github.com/repos/operation-check-for-GHorganization/frontend/pulls \
-            -H "Accept: application/vnd.github.v3+json" \
-            -u ${{ secrets.REPO_ACCESS_TOKEN }} \
-            -d '{"title":"Amazing new feature","body":"Please pull these awesome changes in!","head":"octocat:new-feature","base":"master"}'
-
-      - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           commit-message: 'Update frontend-component'
-          committer: GitHub <noreply@github.com>
+          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           signoff: false
-          author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
+          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           branch: feature/update-fc
           base: master
           delete-branch: true
