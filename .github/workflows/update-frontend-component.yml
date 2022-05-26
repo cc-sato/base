@@ -15,8 +15,28 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: install frontend-component
+        env:
+          PRIVATE_KEY: ${{ secrets.CI_SSH_PRIVATE_KEY }}
         run: |
-          npm i -D git+ssh://git@github.com/operation-check-for-GHorganization/component#master
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          npm i -D git+ssh://git@github.com/operation-check-for-GHorganization/component
+          eval $(ssh-agent -k)
+      - name: Repository dispatch
+        run: |
+          curl -X POST https://api.github.com/repos/operation-check-for-GHorganization/frontend/pulls \
+          -H "Accept: application/vnd.github.v3+json" \
+          -u ${{ secrets.REPO_ACCESS_TOKEN }} \
+          -d '{
+                "title": "Amazing new feature",
+                "body": "Please pull these awesome changes in!",
+                "head": "feature/update-fcc",
+                "base": "master"
+              }'
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
@@ -26,7 +46,7 @@ jobs:
           committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           signoff: false
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          branch: feature/update-fccc
+          branch: feature/update-fc
           base: master
           delete-branch: true
           title: '【自動作成PR】Update frontend-component'
