@@ -6,14 +6,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": "git+ssh://git@github.com/cc-sato/base.git",
+  "repository": "git+ssh://git@github.com/operation-check-for-GHorganization/frontend.git",
   "author": "cc-sato",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cc-sato/base/issues"
+    "url": "https://github.com/operation-check-for-GHorganization/frontend/issues"
   },
-  "homepage": "https://github.com/cc-sato/base#readme",
+  "homepage": "https://github.com/operation-check-for-GHorganization/frontend#readme",
   "dependencies": {
-    "component": "git+ssh://git@github.com/cc-sato/component.git#master"
+    "component": "git+ssh://git@github.com/operation-check-for-GHorganization/component"
   }
 }
