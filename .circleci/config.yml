@@ -1,0 +1,61 @@
+version: 2.1
+set_environment: &set_environment
+  docker:
+    - image: cimg/node:12.22.9
+  working_directory: ~/project
+  environment:
+    TZ: Asia/Tokyo
+    HUSKY_SKIP_INSTALL: 1
+install_hub_command: &install_hub_command
+  run:
+    name: Install hub command
+    command: |
+      curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
+      tar zxf - --strip-components=1 -C /tmp/
+
+commit_and_push: &commit_and_push
+  run:
+    name: Commit and push
+    command: |
+      DIFF_EXIST=$(git diff)
+      HEAD_BRANCH=feature/update-fc
+      echo 'diff: '${DIFF_EXIST}
+      if [[ $DIFF_EXIST ]]; then
+        git add . && \
+        git commit -m '[skip ci] build package' && \
+        git push origin ${HEAD_BRANCH}
+      fi
+create_pull_request: &create_pull_request
+  run:
+    name: Create a pull request
+    command: |
+      DIFF_EXIST=$(git diff)
+      HEAD_BRANCH=feature/update-fc
+      echo 'diff: '${DIFF_EXIST}
+      if [[ $DIFF_EXIST ]]; then
+        PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
+        echo 'PR: '${PR_EXISTS}
+        if [[ -z "$PR_EXISTS" ]]; then
+          /tmp/bin/hub pull-request --message="build package" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
+        fi
+      fi
+
+jobs:
+  update-frontend-component-version:
+    <<: *set_environment
+    steps:
+      - checkout
+      - run: yarn install
+      - *install_hub_command
+      - *commit_and_push
+      - *create_pull_request
+
+workflows:
+  version: 2
+  update-package:
+    jobs:
+      - update-frontend-component-version:
+          filters:
+            branches:
+              only:
+                - ci/update-fc
