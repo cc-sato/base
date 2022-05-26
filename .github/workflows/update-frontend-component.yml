@@ -1,15 +1,14 @@
-name: Update Packages
+name: Update frontend component
 on:
   repository_dispatch:
-    types: [update-packages]
+    types: [update-frontend-component]
   workflow_dispatch:
       packages:
-        description: ''
         required: false
         default: ''
 
 jobs:
-  update-packages:
+  update-frontend-component:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -28,7 +27,7 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          yarn add git+ssh://git@github.com/cc-sato/component.git#master
+          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
@@ -38,10 +37,10 @@ jobs:
           committer: GitHub <noreply@github.com>
           signoff: false
           author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
-          branch: feature/update-package
+          branch: feature/update-fc
           base: master
           delete-branch: true
-          title: '【自動作成PR】Update frontend-component Packages'
+          title: '【自動作成PR】Update frontend-component'
           body: |
             @${{ github.actor }}
       - name: Check Pull Request
