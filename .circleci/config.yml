@@ -17,27 +17,19 @@ commit_and_push: &commit_and_push
   run:
     name: Commit and push
     command: |
-      DIFF_EXIST=$(git diff)
       HEAD_BRANCH=feature/update-fc
-      echo 'diff: '${DIFF_EXIST}
-      if [[ $DIFF_EXIST ]]; then
-        git add . && \
-        git commit -m '[skip ci] build package' && \
-        git push origin ${HEAD_BRANCH}
-      fi
+      git add . && \
+      git commit -m '[skip ci] build package' && \
+      git push origin ${HEAD_BRANCH}
 create_pull_request: &create_pull_request
   run:
     name: Create a pull request
     command: |
-      DIFF_EXIST=$(git diff)
       HEAD_BRANCH=feature/update-fc
-      echo 'diff: '${DIFF_EXIST}
-      if [[ $DIFF_EXIST ]]; then
-        PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
-        echo 'PR: '${PR_EXISTS}
-        if [[ -z "$PR_EXISTS" ]]; then
-          /tmp/bin/hub pull-request --message="build package" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
-        fi
+      PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
+      echo 'PR: '${PR_EXISTS}
+      if [[ -z "$PR_EXISTS" ]]; then
+        /tmp/bin/hub pull-request --message="build package" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
       fi
 
 jobs:
