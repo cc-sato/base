@@ -1,11 +1,8 @@
 name: Update frontend component
 on:
-  repository_dispatch:
-    types: [update-frontend-component]
-  workflow_dispatch:
-      packages:
-        required: false
-        default: ''
+  push:
+    branches:
+      - debug/on
 
 jobs:
   update-frontend-component:
@@ -18,17 +15,8 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: install frontend-component
-        env:
-          PRIVATE_KEY: ${{ secrets.CI_SSH_PRIVATE_KEY }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 700 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
-          eval $(ssh-agent -k)
+          npm i -D git+ssh://git@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
@@ -38,7 +26,7 @@ jobs:
           committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
           signoff: false
           author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          branch: feature/update-fc
+          branch: feature/update-fccc
           base: master
           delete-branch: true
           title: '【自動作成PR】Update frontend-component'
