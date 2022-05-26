@@ -18,6 +18,7 @@ commit_and_push: &commit_and_push
     name: Commit and push
     command: |
       HEAD_BRANCH=feature/update-fc
+      date "+%m/%d/%Y %H:%M" > README.md
       git config --global user.email "tatsuya.satot@coincheck.com"
       git config --global user.name "cc-sato"
       git add . && \
