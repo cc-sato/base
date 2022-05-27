@@ -22,6 +22,8 @@ commit_and_push: &commit_and_push
     command: |
       BASE_BREANCH=master
       HEAD_BRANCH=feature/update-fc
+      git config --global user.email "tatsuya.satot@coincheck.com"
+      git config --global user.name "cc-sato"
       git checkout ${BASE_BREANCH}
       git checkout -b ${HEAD_BRANCH}
       date "+%m/%d/%Y %H:%M" > README.md
