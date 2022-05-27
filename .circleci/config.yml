@@ -12,15 +12,16 @@ install_hub_command: &install_hub_command
     command: |
       curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
       tar zxf - --strip-components=1 -C /tmp/
-
+add_ssh_keys: &add_ssh_keys
+  add_ssh_keys:
+    fingerprints:
+      - "9d:20:ec:a9:70:b1:bc:7e:e0:3d:69:09:f0:90:1d:de"
 commit_and_push: &commit_and_push
   run:
     name: Commit and push
     command: |
       BASE_BREANCH=master
       HEAD_BRANCH=feature/update-fc
-      git config --global user.email "tatsuya.satot@coincheck.com"
-      git config --global user.name "cc-sato"
       git checkout ${BASE_BREANCH}
       git checkout -b ${HEAD_BRANCH}
       date "+%m/%d/%Y %H:%M" > README.md
@@ -43,6 +44,7 @@ jobs:
     <<: *set_environment
     steps:
       - checkout
+      - *add_ssh_keys
       - *install_hub_command
       - *commit_and_push
       - *create_pull_request
