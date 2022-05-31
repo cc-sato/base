@@ -29,22 +29,22 @@ jobs:
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
           eval $(ssh-agent -k)
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          commit-message: 'Update frontend-component'
-          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          signoff: false
-          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          branch: feature/update-fc
-          base: master
-          delete-branch: true
-          title: '【自動作成PR】Update frontend-component'
-          body: |
-            frontend-component側が更新されたので、yarn.lockを更新しましょう。
-            ※要 2Approve
+      - name: Install hub command
+        run: |
+          curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
+          tar zxf - --strip-components=1 -C /tmp/
+      - name: Create a pull request
+        run: |
+          DIFF_EXIST=$(git diff)
+          HEAD_BRANCH=feature/update-fc
+          echo 'diff: '${DIFF_EXIST}
+          if [[ $DIFF_EXIST ]]; then
+            PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
+            echo 'PR: '${PR_EXISTS}
+            if [[ -z "$PR_EXISTS" ]]; then
+              /tmp/bin/hub pull-request --message="Update frontend-component" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
+            fi
+          fi
       - name: Check Pull Request
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
