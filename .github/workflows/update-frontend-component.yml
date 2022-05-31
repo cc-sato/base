@@ -34,8 +34,8 @@ jobs:
         run: |
           DIFF_EXIST=$(git diff)
           HEAD_BRANCH=feature/update-fc
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "tatsuya.sato@coincheck.com"
+          git config --local user.name "cc-sato"
           git branch
           git remote -v
           git checkout -b ${HEAD_BRANCH}
