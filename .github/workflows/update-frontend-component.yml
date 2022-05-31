@@ -11,7 +11,7 @@ jobs:
   update-frontend-component:
     runs-on: ubuntu-latest
     env:
-      GH_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
