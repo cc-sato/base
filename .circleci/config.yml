@@ -15,15 +15,13 @@ install_hub_command: &install_hub_command
 add_ssh_keys: &add_ssh_keys
   add_ssh_keys:
     fingerprints:
-      - "9d:20:ec:a9:70:b1:bc:7e:e0:3d:69:09:f0:90:1d:de"
+      - "SHA256:g24P04b5ccPeN5uwUbrXg9rutygZCvOWy4ay0msG0y8"
 commit_and_push: &commit_and_push
   run:
     name: Commit and push
     command: |
       BASE_BREANCH=master
       HEAD_BRANCH=feature/update-fc
-      git config --global user.email "tatsuya.sato@coincheck.com"
-      git config --global user.name "cc-sato"
       git checkout ${BASE_BREANCH}
       git checkout -b ${HEAD_BRANCH}
       date "+%m/%d/%Y %H:%M" > README.md
@@ -45,8 +43,8 @@ jobs:
   update-frontend-component-version:
     <<: *set_environment
     steps:
-      - checkout
       - *add_ssh_keys
+      - checkout
       - *install_hub_command
       - *commit_and_push
       - *create_pull_request
