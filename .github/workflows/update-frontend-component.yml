@@ -37,12 +37,13 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git branch
+          git remote -v
           git checkout -b ${HEAD_BRANCH}
           echo 'diff: '${DIFF_EXIST}
           if [[ $DIFF_EXIST ]]; then
             git add . && \
             git commit -m '[skip ci] build package'
-            git push origin ${HEAD_BRANCH}
+            git push origin feature/update-fc
           fi
       - name: Check if pr exists
         id: check_pr
