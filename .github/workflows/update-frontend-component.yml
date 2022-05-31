@@ -28,10 +28,9 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
-          eval $(ssh-agent -k)
       - name: Install hub command
         run: |
-          curl -sSLf https://github.com/github/hub/releases/download/v2.8.3/hub-linux-amd64-2.8.3.tgz | \
+          curl -sSLf https://github.com/github/hub/releases/download/v2.14.2/hub-linux-amd64-2.8.3.tgz | \
           tar zxf - --strip-components=1 -C /tmp/
       - name: Create a pull request
         run: |
