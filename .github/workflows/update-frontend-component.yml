@@ -37,13 +37,7 @@ jobs:
           echo 'diff: '${DIFF_EXIST}
           if [[ $DIFF_EXIST ]]; then
             git add . && \
-            git commit -m '[skip ci] build package' && \
-            git push origin ${CIRCLE_BRANCH}
-            PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
-            echo 'PR: '${PR_EXISTS}
-            if [[ -z "$PR_EXISTS" ]]; then
-              /tmp/bin/hub pull-request --message="Update frontend-component" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
-            fi
+            git commit -m '[skip ci] build package'
           fi
       - name: Check if pr exists
         id: check_pr
