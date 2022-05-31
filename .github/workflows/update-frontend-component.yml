@@ -34,6 +34,8 @@ jobs:
         run: |
           DIFF_EXIST=$(git diff)
           HEAD_BRANCH=feature/update-fc
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git branch
           git checkout -b feature/update-fc
           echo 'diff: '${DIFF_EXIST}
