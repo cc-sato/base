@@ -35,7 +35,7 @@ jobs:
           DIFF_EXIST=$(git diff)
           HEAD_BRANCH=feature/update-fc
           git branch
-          git checkout feature/update-fc
+          git checkout -b feature/update-fc
           echo 'diff: '${DIFF_EXIST}
           if [[ $DIFF_EXIST ]]; then
             git add . && \
