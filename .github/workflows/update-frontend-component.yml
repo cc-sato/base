@@ -32,13 +32,15 @@ jobs:
         run: |
           curl -sSLf https://github.com/github/hub/releases/download/v2.14.2/hub-linux-amd64-2.14.2.tgz | \
           tar zxf - --strip-components=1 -C /tmp/
-          /tmp/bin/hub config
       - name: Create a pull request
         run: |
           DIFF_EXIST=$(git diff)
           HEAD_BRANCH=feature/update-fc
           echo 'diff: '${DIFF_EXIST}
           if [[ $DIFF_EXIST ]]; then
+            git add . && \
+            git commit -m '[skip ci] build package' && \
+            git push origin ${CIRCLE_BRANCH}
             PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
             echo 'PR: '${PR_EXISTS}
             if [[ -z "$PR_EXISTS" ]]; then
