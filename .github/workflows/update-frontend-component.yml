@@ -1,11 +1,8 @@
 name: Update frontend component
 on:
-  repository_dispatch:
-    types: [update-frontend-component]
-  workflow_dispatch:
-      packages:
-        required: false
-        default: ''
+  push:
+    branches:
+      - debug/on
 
 jobs:
   update-frontend-component:
@@ -27,23 +24,19 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
+          npm i -D git+ssh://git@github.com/operation-check-for-GHorganization/component
           eval $(ssh-agent -k)
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v4
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          commit-message: 'Update frontend-component'
-          committer: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          signoff: false
-          author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-          branch: feature/update-fc
-          base: master
-          delete-branch: true
-          title: '【自動作成PR】Update frontend-component'
-          body: |
-            @${{ github.actor }}
+      - name: Repository dispatch
+        run: |
+          curl -X POST https://api.github.com/repos/operation-check-for-GHorganization/frontend/pulls \
+          -H "Accept: application/vnd.github.v3+json" \
+          -u ${{ secrets.REPO_ACCESS_TOKEN }} \
+          -d '{
+                "title": "Amazing new feature",
+                "body": "Please pull these awesome changes in!",
+                "head": "feature/update-fc",
+                "base": "master"
+              }'
       - name: Check Pull Request
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
