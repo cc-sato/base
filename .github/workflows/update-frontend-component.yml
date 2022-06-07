@@ -18,22 +18,20 @@ jobs:
           persist-credentials: false
       - name: setup Node
         uses: actions/setup-node@v1
+      - name: Generate github token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: yarn install frontend-component
-        env:
-          PRIVATE_KEY: ${{ secrets.APP_TOKEN }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 700 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
+          yarn add git+https://${{ steps.generate_token.outputs.token }}:x-oauth-basic@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.APP_TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
           commit-message: 'Update frontend-component'
           committer: GitHub <noreply@github.com>
           signoff: false
