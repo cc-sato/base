@@ -33,9 +33,7 @@ jobs:
         with:
           token: ${{ steps.generate_token.outputs.token }}
           commit-message: 'Update frontend-component'
-          committer: GitHub <noreply@github.com>
           signoff: false
-          author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
           branch: feature/update-package
           base: master
           delete-branch: true
