@@ -24,17 +24,14 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v1
+        with:
+          key: ${{ secrets.APP_PRIVATE_KEY }} # 必須
+          name: id_rsa
+          known_hosts: github.com
       - name: yarn install frontend-component
-        env:
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
         run: |
-          echo "$private_key"
-          mkdir -p ~/.ssh
-          echo "$private_key" | tr -d '\r' > ~/.ssh/id_rsa
-          chmod 700 ~/.ssh/id_rsa
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/id_rsa
-          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
