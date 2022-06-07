@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v1
       - name: yarn install frontend-component
         run: |
-          yarn add git+ssh://${{ secrets.CI_SSH_PRIVATE_KEY }}x-oauth-basic@github.com/operation-check-for-GHorganization/component
+          yarn add git+ssh://${{ secrets.CI_SSH_PRIVATE_KEY }}:x-oauth-basic@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
