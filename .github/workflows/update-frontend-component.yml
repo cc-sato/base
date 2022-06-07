@@ -32,7 +32,7 @@ jobs:
         run: |
           touch ~/.netrc
           echo "machine github.com" > ~/.netrc
-          echo "login $MACHINE_USER" >> ~/.netrc
+          echo "login $USER" >> ~/.netrc
           echo "password $ACCESS_TOKEN" >> ~/.netrc
           chmod 600 ~/.netrc
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
