@@ -25,13 +25,21 @@ jobs:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: yarn install frontend-component
+        env:
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
         run: |
-          yarn add git+https://${{ steps.generate_token.outputs.token }}:x-oauth-basic@github.com/operation-check-for-GHorganization/component
+          mkdir -p ~/.ssh
+          echo "$private_key" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ steps.generate_token.outputs.token }}
+          token: ${{ secrets.APP_TOKEN }}
           commit-message: 'Update frontend-component'
           signoff: false
           branch: feature/update-package
