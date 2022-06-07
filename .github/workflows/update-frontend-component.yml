@@ -1,17 +1,16 @@
-name: Update frontend component
+name: Update Frontend-Component Version
 on:
   repository_dispatch:
-    types: [update-frontend-component]
+    types: [update-frontend-component-version]
   workflow_dispatch:
-      packages:
-        required: false
-        default: ''
+    packages:
+      description: ''
+      required: false
+      default: ''
 
 jobs:
-  update-frontend-component:
+  update-packages:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -19,9 +18,7 @@ jobs:
           persist-credentials: false
       - name: setup Node
         uses: actions/setup-node@v1
-      - name: install frontend-component
-        env:
-          PRIVATE_KEY: ${{ secrets.CI_SSH_PRIVATE_KEY }}
+      - name: yarn install frontend-component
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
@@ -30,52 +27,21 @@ jobs:
           ssh-add ~/.ssh/id_rsa
           ssh-keyscan -H github.com >> ~/.ssh/known_hosts
           yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
-      - name: commit
-        run: |
-          DIFF_EXIST=$(git diff)
-          HEAD_BRANCH=feature/update-fc
-          git config --local user.email "tatsuya.sato@coincheck.com"
-          git config --local user.name "cc-sato"
-          git branch
-          git remote -v
-          git checkout -b ${HEAD_BRANCH}
-          echo 'diff: '${DIFF_EXIST}
-          if [[ $DIFF_EXIST ]]; then
-            git add . && \
-            git commit -m '[skip ci] build package'
-            git push origin feature/update-fc
-          fi
-      - name: Check if pr exists
-        id: check_pr
-        run: |
-          pr_title=${{ (github.ref == 'refs/heads/stage' && 'Stage') || 'Develop' }}
-          base_branch=${{ 'main' }}
-          echo "::set-output name=count::$(gh pr list -S ${pr_title}' in:title' -B $base_branch | wc -l)"
-          echo "::set-output name=pr_title::$pr_title"
-          echo "::set-output name=base_branch::$base_branch"
-      - name: Create release pr
-        if: ${{ steps.check_pr.outputs.count == 0 }}
-        run: |
-          gh pr create -B ${{ steps.check_pr.outputs.base_branch }} -t ${{ steps.check_pr.outputs.pr_title }} -b ""
-      - name: Install hub command
-        run: |
-          curl -sSLf https://github.com/github/hub/releases/download/v2.14.2/hub-linux-amd64-2.14.2.tgz | \
-          tar zxf - --strip-components=1 -C /tmp/
-      - name: Create a pull request
-        run: |
-          DIFF_EXIST=$(git diff)
-          HEAD_BRANCH=feature/update-fc
-          echo 'diff: '${DIFF_EXIST}
-          if [[ $DIFF_EXIST ]]; then
-            git add . && \
-            git commit -m '[skip ci] build package' && \
-            git push origin ${CIRCLE_BRANCH}
-            PR_EXISTS=$(/tmp/bin/hub pr list --base=master --head=${HEAD_BRANCH})
-            echo 'PR: '${PR_EXISTS}
-            if [[ -z "$PR_EXISTS" ]]; then
-              /tmp/bin/hub pull-request --message="Update frontend-component" --base=${CIRCLE_PROJECT_USERNAME}:master --head=${CIRCLE_PROJECT_USERNAME}:${HEAD_BRANCH}
-            fi
-          fi
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'Update frontend-component'
+          committer: GitHub <noreply@github.com>
+          signoff: false
+          author: ${{ github.actor }} <${{ github.actor }}@coincheck.com>
+          branch: feature/update-package
+          base: master
+          delete-branch: true
+          title: '【自動作成PR】masterブランチのfrontend-componentを最新Versionに'
+          body: |
+            https://github.com/coincheckjp/frontend-component が更新されましたので、こちらのmasterブランチも更新しましょう。
       - name: Check Pull Request
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
