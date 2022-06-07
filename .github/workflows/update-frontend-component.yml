@@ -19,8 +19,16 @@ jobs:
       - name: setup Node
         uses: actions/setup-node@v1
       - name: yarn install frontend-component
+        env:
+          PRIVATE_KEY: ${{ secrets.CI_SSH_PRIVATE_KEY }}
         run: |
-          yarn add git+https://${{ secrets.CI_SSH_PRIVATE_KEY }}:x-oauth-basic@github.com/operation-check-for-GHorganization/component
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          chmod 700 ~/.ssh/id_rsa
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
