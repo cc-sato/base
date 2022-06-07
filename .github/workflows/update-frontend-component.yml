@@ -28,6 +28,7 @@ jobs:
         env:
           private_key: ${{ secrets.APP_PRIVATE_KEY }}
         run: |
+          echo "$private_key"
           mkdir -p ~/.ssh
           echo "$private_key" | tr -d '\r' > ~/.ssh/id_rsa
           chmod 700 ~/.ssh/id_rsa
