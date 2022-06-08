@@ -18,24 +18,9 @@ jobs:
           persist-credentials: false
       - name: setup Node
         uses: actions/setup-node@v1
-      - name: Generate github token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.APP_PRIVATE_KEY }}
       - name: yarn install frontend-component
-        env:
-          USER: ${{ secrets.APP_ID }}
-          PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-          ACCESS_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          touch ~/.netrc
-          echo "machine github.com" > ~/.netrc
-          echo "login $USER" >> ~/.netrc
-          echo "password $ACCESS_TOKEN" >> ~/.netrc
-          chmod 600 ~/.netrc
-          yarn add git+ssh://git@github.com/operation-check-for-GHorganization/component
+          yarn add git+https://${{ secrets.CI_SSH_PRIVATE_KEY }}:x-oauth-basic@github.com/operation-check-for-GHorganization/component
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
